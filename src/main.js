@@ -8,6 +8,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 引入vue-router
 import router from '@/router'
 
+// 引入axios
+import axios from '@/api'
+// 将axios设置在原型上
+Vue.prototype.$http = axios
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
