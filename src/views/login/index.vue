@@ -3,7 +3,7 @@
   <div class="container-login">
     <el-card>
       <!-- 黑马头条logo -->
-      <img src="../../assets/logo_index.png" width="200px" alt />
+      <img class="logo" src="../../assets/logo_index.png" width="200px" alt />
 
       <!-- 登陆表单控件 -->
       <el-form ref="loginForm" status-icon :model="loginForm" :rules="loginRules">
@@ -78,7 +78,7 @@ export default {
             .post('authorizations', this.loginForm)
             .then(res => {
               // 登陆成功后,跳转页面
-              this.$router.push('/home')
+              this.$router.push('/')
             })
             .catch(() => {
               // 验证失败,弹出警告提示
@@ -111,7 +111,7 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
 }
-img {
+.logo {
   display: block;
   margin: 0 auto;
   margin-bottom: 30px;
