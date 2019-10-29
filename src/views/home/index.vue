@@ -8,12 +8,13 @@
         <div class="logo" :class="{sLogin:!isOn}"></div>
         <!-- 导航列表 -->
         <el-menu
-          default-active="/"
+          :default-active="$route.path"
           background-color="#002033"
           text-color="#fff"
           active-text-color="#ffd04b"
           style="border-right:none"
           :collapse="!isOn"
+          router
           :collapse-transition="false"
         >
           <!-- el-submenu 拥有值二级菜单的菜单项目 el-menu-item 没有二级菜单的菜单项-->
@@ -22,27 +23,27 @@
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-menu-item index="article">
+          <el-menu-item index="/article">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">内容管理</span>
           </el-menu-item>
-          <el-menu-item index="image">
+          <el-menu-item index="/image">
             <i class="el-icon-folder-opened"></i>
             <span slot="title">素材管理</span>
           </el-menu-item>
-          <el-menu-item index="publish">
+          <el-menu-item index="/publish">
             <i class="el-icon-document"></i>
             <span slot="title">发布文章</span>
           </el-menu-item>
-          <el-menu-item index="comment">
+          <el-menu-item index="/comment">
             <i class="el-icon-chat-line-square"></i>
             <span slot="title">评论管理</span>
           </el-menu-item>
-          <el-menu-item index="fans">
+          <el-menu-item index="/fans">
             <i class="el-icon-present"></i>
             <span slot="title">粉丝管理</span>
           </el-menu-item>
-          <el-menu-item index="setting">
+          <el-menu-item index="/setting">
             <i class="el-icon-setting"></i>
             <span slot="title">个人设置</span>
           </el-menu-item>
@@ -56,17 +57,17 @@
           <span class="el-icon-s-fold icon" @click="triggerMenu"></span>
           <span class="header_text">江苏传智播客科技教育有限公司</span>
           <!-- 下拉菜单 -->
-          <el-dropdown class="dropdown">
+          <el-dropdown class="dropdown" @command="handleClick">
             <span class="el-dropdown-link">
               <!-- 用户头像 -->
-              <img class="headPortrait" src="../../assets/avatar.jpg" alt />
+              <img class="headPortrait" :src="userInfo.photo" alt />
               <!-- 用户名称 -->
-              <span class="userName">Admin</span>
+              <span class="userName">{{userInfo.name}}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-unlock" command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-header>
@@ -81,16 +82,37 @@
 </template>
 
 <script>
+// 引入存储文件
+import localStore from '@/utils/store'
 export default {
   data () {
     return {
-      isOn: true
+      isOn: true,
+      userInfo: {} // 声明用户信息数据
     }
   },
   methods: {
     triggerMenu () {
       // 设置切换左侧菜单的开关方法
       this.isOn = !this.isOn
+    },
+    created () {
+      // 获取设置用户信息
+      let user = localStore.getUser() || {}
+      this.userInfo.name = user.name
+      this.userInfo.photo = user.photo
+    },
+    logout () {
+      // 用户退出,清除用户信息,跳转至登陆页面
+      localStore.delUser()
+      this.$router.push('/login')
+    },
+    setting () {
+      // 个人设置页面
+      this.$router.push('/setting')
+    },
+    handleClick (command) {
+      this[command]()
     }
   }
 }

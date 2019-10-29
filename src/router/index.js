@@ -9,17 +9,15 @@ import login from '@/views/login'
 import Home from '@/views/home'
 import Welcome from '@/views/welcome'
 import NotFound from '@/views/404'
+import Article from '@/views/article'
+
+// 引入存储API文件
+import localStore from '@/utils/store'
 Vue.use(VueRouter)
 
 // 实例化
-export default new VueRouter({
+const router = new VueRouter({
   routes: [
-    // {
-    //   // 打开项目默认地址为"/"时,跳转至登陆界面
-    //   path: '/',
-    //   redirect: '/login'
-    // },
-
     {
       // 登陆路由 - 一级路由
       path: '/login',
@@ -34,9 +32,41 @@ export default new VueRouter({
         {
           path: '/',
           component: Welcome
+        },
+        {
+          path: '/article',
+          component: Article
         }
       ]
     },
     { path: '*', component: NotFound }
   ]
 })
+
+// 添加路由的导航守卫(前置导航守卫)
+router.beforeEach((to, from, next) => {
+  /*
+      参数:
+        to: 跳转到的目标 路由对象
+        from 从哪里跳转到目标 路由对象
+        next: 下一步方法
+          - 放行: next('/login')
+          - 拦截: 写处理函数
+    */
+  // 当每次跳转路由前触发(获取数据时)
+  const user = localStore.getUser()
+  // 判断是否获取到用户信息,并且携带token
+  if (user && user.token) {
+    // 登陆成功,放行
+    next()
+  } else {
+    // 登陆不成功,跳转回登陆界面
+    if (to.path === '/login') {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
+
+export default router

@@ -33,6 +33,8 @@
 </template>
 
 <script>
+// 导入存储信息API文件
+import localStore from '@/utils/store'
 export default {
   // 设置数据
   data () {
@@ -51,8 +53,8 @@ export default {
     return {
       // 登陆数据
       loginForm: {
-        mobile: '',
-        code: ''
+        mobile: '14444444444',
+        code: '246810'
       },
       // 设置校验规则
       loginRules: {
@@ -71,19 +73,33 @@ export default {
   },
   methods: {
     login () {
-      this.$refs['loginForm'].validate(valid => {
+      this.$refs['loginForm'].validate(async valid => {
         if (valid) {
           // 整体校验通过,登陆成功,发送接口请求,跳转主页
-          this.$http
-            .post('authorizations', this.loginForm)
-            .then(res => {
-              // 登陆成功后,跳转页面
-              this.$router.push('/')
-            })
-            .catch(() => {
-              // 验证失败,弹出警告提示
-              this.$message.error('手机号或验证码错误')
-            })
+          // this.$http
+          //   .post('authorizations', this.loginForm)
+          //   .then(res => {
+          //     // 登陆成功后,跳转页面
+          //     // 登陆时需要保存用户信息(token)
+          //     localStore.setUser(res.data.data)
+          //     this.$router.push('/')
+          //   })
+          //   .catch(() => {
+          //     // 验证失败,弹出警告提示
+          //     this.$message.error('手机号或验证码错误')
+          //   })
+
+          // 使用async&await 改造登陆的请求
+          // 当一段代码不能保证一定没有报错  try {} catch (e) {} 捕获异常处理异常
+          try {
+            // 通过解构赋值获取data
+            let { data: { data } } = await this.$http.post('authorizations', this.loginForm)
+            localStore.setUser(data)
+            this.$router.push('/')
+          } catch (e) {
+            // 登陆失败,捕获到错误,警告提示
+            this.$message.error('手机号或验证码错误')
+          }
         }
       })
     }
@@ -91,7 +107,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang='less'>
 /* 全屏容器 */
 .container-login {
   width: 100%;
