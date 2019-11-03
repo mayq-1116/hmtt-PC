@@ -2,6 +2,9 @@
 // 引入axios
 import axios from 'axios'
 
+// 引入json-bigint插件
+import JSONBIG from 'json-bigint'
+
 // 引入存储API
 import localStore from '@/utils/store'
 
@@ -10,6 +13,15 @@ import router from '@/router'
 
 // 设置基准地址
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+axios.defaults.transformResponse = [(data) => {
+  // 对data进行格式转换  data就是后台响应的json字符串
+  // 如果没数据呢？data === null 使用JSONBIG.parse(null) 报错
+  try {
+    return JSONBIG.parse(data)
+  } catch (e) {
+    return data
+  }
+}]
 
 // 配置默认的自定义请求头
 // 如果有用户信息,才能获取到token,才执行判断内的代码,如果没有(未登录),不会验证token

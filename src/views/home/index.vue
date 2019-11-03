@@ -96,12 +96,6 @@ export default {
       // 设置切换左侧菜单的开关方法
       this.isOn = !this.isOn
     },
-    created () {
-      // 获取设置用户信息
-      let user = localStore.getUser() || {}
-      this.userInfo.name = user.name
-      this.userInfo.photo = user.photo
-    },
     logout () {
       // 用户退出,清除用户信息,跳转至登陆页面
       localStore.delUser()
@@ -114,6 +108,12 @@ export default {
     handleClick (command) {
       this[command]()
     }
+  },
+  created () {
+    // 获取设置用户信息
+    let user = localStore.getUser() || {}
+    this.userInfo.name = user.name
+    this.userInfo.photo = user.photo
   }
 }
 </script>
