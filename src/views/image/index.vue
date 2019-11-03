@@ -13,14 +13,17 @@
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
         <!-- 绿色按钮 -->
-        <el-button @click="dialogVisible=true" style="float:right" type="success" size="small">添加素材</el-button>
+        <el-button @click="open" style="float:right" type="success" size="small">添加素材</el-button>
       </div>
       <!-- 对话框 -->
       <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+          :headers="headers"
           :show-file-list="false"
+          :on-success="handleSuccess"
+          name="image"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -60,6 +63,8 @@
 </template>
 
 <script>
+// 引入存储API文件
+import localStore from '@/utils/store'
 export default {
   // 定义数据
   data () {
@@ -77,8 +82,14 @@ export default {
       total: 0,
       // 控制对话框显示隐藏, 默认隐藏
       dialogVisible: false,
-      // 图片样式
-      imageUrl: null
+      // 定义上传后的图片地址
+      imageUrl: null,
+      // 定义上传请求头
+      headers: {
+        // 设置授权格式 , 通过本地存储
+        Authorization: `Bearer ${localStore.getUser().token}`
+      }
+
     }
   },
   // 组件加载发送请求
@@ -145,6 +156,25 @@ export default {
         // 列表重新查询加载
         this.getImages()
       })
+    },
+
+    // 设置图片上传成功后的事件
+    handleSuccess (res) {
+      // res是响应体 , 需要从响应体中获取url,给imageUrl赋值
+      this.imageUrl = res.data.url
+      // 提示上传成功
+      this.$message.success('上传成功')
+      // 预览2s后,关闭对话框
+      window.setTimeout(() => {
+        this.dialogVisible = false
+        // 重新刷新列表
+        this.getImages()
+      }, 2000)
+    },
+    // 定义打开兑换框时,清空数据
+    open () {
+      this.dialogVisible = true
+      this.imageUrl = null
     }
   }
 }

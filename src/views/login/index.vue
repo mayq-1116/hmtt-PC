@@ -53,7 +53,7 @@ export default {
     return {
       // 登陆数据
       loginForm: {
-        mobile: '14444444444',
+        mobile: '15555555551',
         code: '246810'
       },
       // 设置校验规则
