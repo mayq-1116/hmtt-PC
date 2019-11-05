@@ -11,6 +11,7 @@ import Welcome from '@/views/welcome'
 import NotFound from '@/views/404'
 import Article from '@/views/article'
 import Image from '@/views/image'
+import Publish from '@/views/publish'
 
 // 引入存储API文件
 import localStore from '@/utils/store'
@@ -30,18 +31,13 @@ const router = new VueRouter({
       component: Home,
       // 设置二级路由
       children: [
-        {
-          path: '/',
-          component: Welcome
-        },
-        {
-          path: '/article',
-          component: Article
-        },
-        {
-          path: '/image',
-          component: Image
-        }
+        { path: '/', component: Welcome },
+        // 内容管理
+        { path: '/article', component: Article },
+        // 素材管理
+        { path: '/image', component: Image },
+        // 发布文章
+        { path: '/publish', component: Publish }
       ]
     },
     { path: '*', component: NotFound }
