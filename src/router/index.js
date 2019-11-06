@@ -13,6 +13,7 @@ import Article from '@/views/article'
 import Image from '@/views/image'
 import Publish from '@/views/publish'
 import Comment from '@/views/comment'
+import Setting from '@/views/setting'
 
 // 引入存储API文件
 import localStore from '@/utils/store'
@@ -40,7 +41,9 @@ const router = new VueRouter({
         // 发布文章
         { path: '/publish', component: Publish },
         // 评论内容
-        { path: '/comment', component: Comment }
+        { path: '/comment', component: Comment },
+        // 个人设置
+        { path: '/setting', component: Setting }
       ]
     },
     { path: '*', component: NotFound }

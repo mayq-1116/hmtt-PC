@@ -84,11 +84,17 @@
 <script>
 // 引入存储文件
 import localStore from '@/utils/store'
+// 导入eventBus
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
       isOn: true,
-      userInfo: {} // 声明用户信息数据
+      // 声明用户信息数据
+      userInfo: {
+        name: '',
+        photo: ''
+      }
     }
   },
   methods: {
@@ -114,6 +120,16 @@ export default {
     let user = localStore.getUser() || {}
     this.userInfo.name = user.name
     this.userInfo.photo = user.photo
+
+    // 绑定事件,接收修改name的参数
+    eventBus.$on('updateName', name => {
+      this.userInfo.name = name
+    })
+
+    // 绑定事件,接收修改头像的参数
+    eventBus.$on('updatePhoto', (photo) => {
+      this.userInfo.photo = photo
+    })
   }
 }
 </script>

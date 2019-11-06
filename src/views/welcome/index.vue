@@ -6,14 +6,14 @@
 
 <script>
 export default {
-  created () {
-    // 测试发送请求数据
-    this.$http.get('http://ttapi.research.itcast.cn/mp/v1_0/articles').then(res => {
-      console.log(res.data)
-    }).catch(() => {
-      console.log('error')
-    })
-  }
+  // created () {
+  //   // 测试发送请求数据
+  //   this.$http.get('http://ttapi.research.itcast.cn/mp/v1_0/articles').then(res => {
+  //     console.log(res.data)
+  //   }).catch(() => {
+  //     console.log('error')
+  //   })
+  // }
 }
 </script>
 
